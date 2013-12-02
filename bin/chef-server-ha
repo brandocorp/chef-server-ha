@@ -1,47 +1,4 @@
 #!/bin/bash
-set -x
-
 BASE_PATH="/opt/chef-server"
 
-show_usage(){
-  cat <<HOW
-
-Usage:: $(basename $0) [options]
-
-Options::
-
-    --with-lvm    --lvm        Triggers lvm configuration for use with DRBD
-    --with-drbd   --drbd       Triggers drbd configuration
-
-HOW
-}
-
-while [[ ! -z "${1}" ]]; do
-  case "${1}" in
-    --with-lvm|--lvm )
-      USE_LVM=true
-    ;;
-    --with-drbd|--drbd )
-      USE_DRBD=true
-    ;;
-    *)
-      echo "Invalid parameter '${1}'"
-      show_usage
-      exit 1
-    ;;
-  esac
-  shift
-done
-
-if [[ $USE_LVM && $USE_DRBD ]]; then
-  chef-solo -c ${BASE_PATH}/embedded/cookbooks/solo.rb -j ${BASE_PATH}/embedded/cookbooks/ha.json
-elif [[ $USE_LVM ]]; then
-  echo "LVM only"
-  chef-solo -c ${BASE_PATH}/embedded/cookbooks/solo.rb -j ${BASE_PATH}/embedded/cookbooks/lvm.json
-elif [[ $USE_DRBD ]]; then
-  echo "DRBD only"
-  chef-solo -c ${BASE_PATH}/embedded/cookbooks/solo.rb -j ${BASE_PATH}/embedded/cookbooks/drbd.json
-else
-  echo "You did not request DRBD or LVM. Nothing to see here..."
-  exit 1
-fi
+${BASE_PATH}/embedded/bin/chef-solo -c ${BASE_PATH}/embedded/cookbooks/solo.rb -j ${BASE_PATH}/embedded/cookbooks/ha.json
