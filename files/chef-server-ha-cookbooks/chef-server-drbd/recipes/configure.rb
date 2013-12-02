@@ -9,8 +9,8 @@ if primary[:fqdn] =~ /#{node[:fqdn]}/
   node.set['chef_server']['drbd']['master'] = true
 end
 
-template "/etc/drbd.d/global_config.conf" do
-  source "global_config.conf.erb"
+template "/etc/drbd.d/global_common.conf" do
+  source "global_common.conf.erb"
   owner "root"
   group "root"
   mode "0644"
