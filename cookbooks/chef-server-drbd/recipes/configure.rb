@@ -1,5 +1,4 @@
-include_recipe "chef-server-drbd::drbd"
-include_recipe "chef-server-keepalived::default"
+include_recipe "chef-server-drbd::install"
 
 resource = node.set['chef-server']['drbd']['resource_name'] = "chef-server"
 
