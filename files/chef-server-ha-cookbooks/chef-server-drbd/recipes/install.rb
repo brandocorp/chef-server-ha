@@ -14,13 +14,13 @@ end
 package "Enterprise Linux Repo" do
   source "#{Chef::Config[:file_cache_path]}/elrepo.noarch.rpm"
   action :install
-  not_if { "rpm -qa | grep 'elrepo-release'" }
+  not_if "rpm -qa | grep 'elrepo-release'"
 end
 
 packages.each do |pkg|
   package pkg do
     action :install
-    not_if { "rpm -qa | grep #{pkg}" }
+    not_if "rpm -qa | grep #{pkg}"
   end
 end
 
