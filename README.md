@@ -1,4 +1,4 @@
 chef-server-ha
-==============
+================
 
-Bootstrap Chef Server in HA-mode
+High-Availabliity configuration for Open Source Chef Server

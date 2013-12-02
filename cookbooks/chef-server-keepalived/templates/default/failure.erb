@@ -1,0 +1,31 @@
+#!/bin/sh
+
+demote_node() {
+  unmount /dev/drbd/by-res/<%= @drbd_resource %>
+  /opt/chef-server/bin/chef-server-ctl stop drbd
+}
+
+try_stopping() {
+  RETVAL=0
+  <% @config['service_order'].each do |svc_name| -%>
+  if ! /opt/chef-server/bin/chef-server-ctl stop <%= svc_name %>
+    RETVAL=1
+  fi
+  <% end -%>
+  return $RETVAL
+}
+
+kill_em_all() {
+  <% @config['service_order'].each do |svc_name| -%>
+  /opt/chef-server/bin/chef-server-ctl kill <%= svc_name %>
+  <% end -%>
+}
+
+# Demote ourselves to a secondary
+demote_node
+
+if ! try_stopping; then
+  kill_em_all
+fi
+
+

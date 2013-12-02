@@ -1,0 +1,6 @@
+{
+  "run_list": [
+    "recipe[chef-server-drbd]",
+    "recipe[chef-server-keepalived]"
+  ]
+}

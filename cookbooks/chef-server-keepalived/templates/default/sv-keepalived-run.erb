@@ -1,0 +1,4 @@
+#!/bin/sh
+exec 2>&1
+exec chpst -P /opt/chef-server/embedded/sbin/keepalived -f <%= File.join(node['chef_server']['keepalived']['dir'], "etc", "keepalived.conf") %>
+

@@ -1,0 +1,45 @@
+#!/bin/bash
+
+DRBDADM="/sbin/drbdadm"
+DRBDSETUP="/sbin/drbdsetup"
+PROC_DRBD="/proc/drbd"
+ADD_MOD_PARAM=""
+INSTANCE_ROLE_FILE="/opt/chef-server/embedded/service/drbd/role"
+INSTANCE_ROLE="$(cat $INSTANCE_ROLE_FILE)"
+
+case "$1" in
+  start)
+    if ! /etc/init.d/drbd start
+      exit 1
+    fi
+  ;;
+  stop)
+    if ! /etc/init.d/drbd stop
+      exit 1
+    fi
+  ;;
+  status)
+    if [ -e $PROC_DRBD ]; then
+      case "$INSTANCE_ROLE" in
+        primary)
+          cat /proc/drbd | grep -c -e "rw:Primary/*"
+          RETVAL=$?
+        ;;
+        secondary)
+          cat /proc/drbd | grep -c -e "ro:Secondary/*"
+          RETVAL=$?
+        ;;
+      esac
+      exit $RETVAL
+    else
+      echo >&2 "drbd not loaded"
+      exit 1
+    fi
+  ;;
+  *)
+    echo "Usage: /etc/init.d/drbd {start|stop|status|reload|restart|force-reload}"
+    exit 1
+  ;;
+esac
+
+exit 0

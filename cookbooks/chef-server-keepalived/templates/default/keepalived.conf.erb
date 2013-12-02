@@ -1,0 +1,71 @@
+<% if @config['use_smtp'] -%>
+global_defs {
+
+  ! Alert notifications will be sent to these addresses
+  notification_email {
+  <% @config['notification_email'].each do |email_addr| -%>
+    <%= email_addr %>
+  <% end -%>
+  }
+
+  ! Alerts will come from this address
+  notification_email_from <%= @config['notification_email_from'] %>
+
+  ! SMTP Server Configuration
+  smtp_server <%= @config['smtp_server'] %>
+  smtp_connect_timeout <%= @config['smtp_connect_timeout'] %>
+
+}
+<% end -%>
+
+<% @config['service_order'].each do |svc_name| -%>
+vrrp_script check_<%= svc_name %> {
+  script "<%= @config['check_script'] %> <%= svc_name %>"
+  interval <%= @config['check_script_interval'] %>
+}
+<% end -%>
+
+<% if node['chef_server']['drbd']['enable'] -%>
+vrrp_script check_drbd {
+  script "<%= @config['check_script'] %> drbd"
+  interval <%= @config['check_script_interval'] %>
+}
+<% end -%>
+
+vrrp_instance LocalChefServer {
+
+  interface <%= @config['vrrp_instance_interface'] %>
+  state <%= @config['vrrp_instance_state'] %>
+  virtual_router_id <%= @config['vrrp_instance_virtual_router_id'] %>
+  priority <%= @config['vrrp_instance_priority'] %>
+
+  advert_int <%= @config['vrrp_instance_advert_int'] %>
+
+  <%= "smtp_alert" if @config['use_smtp'] %>
+
+  <% if @config['vrrp_instance_password'] -%>
+  authentication {
+    auth_type PASS
+    auth_pass <%= @config['vrrp_instance_password'] %>
+  }
+  <% end -%>
+
+  virtual_ipaddress {
+      <%= @config['vrrp_instance_ipaddress'] %>
+  }
+
+  track_interface {
+    <%= @config['vrrp_instance_ipaddress_dev'] %>
+  }
+
+  track_script {
+      <% @config['service_order'].each do |svc_name| -%>
+      check_<%= svc_name %>
+      <% end -%>
+  }
+
+  notify_master "<%= @config['active_script']  %>"
+  notify_backup "<%= @config['passive_script'] %>"
+  notify_fault  "<%= @config['failure_script'] %>"
+
+}

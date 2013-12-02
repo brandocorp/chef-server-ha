@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# get the service status
+if ! /opt/chef-server/bin/chef-server-ctl status "$1"; then
+  # bad status report fails the check
+  RETVAL=1
+else
+  RETVAL=0
+fi
+
+exit $RETVAL
