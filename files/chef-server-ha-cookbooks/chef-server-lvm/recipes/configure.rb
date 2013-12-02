@@ -1,3 +1,5 @@
+include_recipe "chef-server-lvm::install"
+
 lvm_volume_group = node['chef_server']['lvm']['volume_group']
 lvm_logical_volume = node['chef_server']['lvm']['logical_volume']
 lvm_devices = node['chef_server']['lvm']['devices']

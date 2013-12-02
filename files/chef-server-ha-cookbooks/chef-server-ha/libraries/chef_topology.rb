@@ -1,8 +1,5 @@
 require 'mixlib/config'
 require 'chef/mash'
-require 'chef/json_compat'
-require 'chef/mixin/deep_merge'
-require 'securerandom'
 
 module ChefTopology
   extend(Mixlib::Config)

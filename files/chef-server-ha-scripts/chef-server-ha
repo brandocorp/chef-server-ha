@@ -1,0 +1,5 @@
+#!/bin/bash
+CS_PATH="/opt/chef-server"
+HA_PATH="/opt/chef-server-ha"
+
+${CS_PATH}/embedded/bin/chef-solo -c ${HA_PATH}/embedded/cookbooks/solo.rb -j ${HA_PATH}/embedded/cookbooks/ha.json

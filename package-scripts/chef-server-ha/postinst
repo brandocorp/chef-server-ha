@@ -1,0 +1,24 @@
+#!/bin/bash
+#
+# Perform necessary chef-server setup steps after package is installed.
+#
+PROGNAME=$(basename $0)
+
+function error_exit
+{
+	echo "${PROGNAME}: ${1:-"Unknown Error"}" 1>&2
+	exit 1
+}
+
+
+ln -sf /opt/chef-server-ha/bin/chef-server-ha /usr/bin || error_exit "Cannot link chef-server-ha in /usr/bin"
+
+
+echo -e "\033[1mThank you for installing Chef Server HA!\033[0m"
+echo
+echo "The next step in the install process is to run:"
+echo
+echo -e "\033[1msudo chef-server-ha\033[0m"
+echo
+exit 0
+

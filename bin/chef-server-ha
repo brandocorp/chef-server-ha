@@ -1,4 +1,0 @@
-#!/bin/bash
-BASE_PATH="/opt/chef-server"
-
-${BASE_PATH}/embedded/bin/chef-solo -c ${BASE_PATH}/embedded/cookbooks/solo.rb -j ${BASE_PATH}/embedded/cookbooks/ha.json

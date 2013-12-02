@@ -1,5 +1,3 @@
-include_recipe "runit"
-
 if File.exists?('/etc/chef-server/chef-topology.rb')
   ChefTopology.from_file('/etc/chef-server/chef-topology.rb')
 end
